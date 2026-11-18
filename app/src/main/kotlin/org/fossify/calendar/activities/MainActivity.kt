@@ -14,7 +14,9 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.FragmentManager
+import com.google.android.gms.ads.AdView
 import org.fossify.calendar.R
+import org.fossify.calendar.helpers.AdManager
 import org.fossify.calendar.adapters.EventListAdapter
 import org.fossify.calendar.adapters.QuickFilterCalendarAdapter
 import org.fossify.calendar.databases.EventsDatabase
@@ -165,6 +167,7 @@ class MainActivity : SimpleActivity(), RefreshRecyclerViewListener {
     private var maxFetchedSearchTS = 0L
     private var searchResultEvents = ArrayList<Event>()
     private var bottomItemAtRefresh: ListItem? = null
+    private var bannerAdView: AdView? = null
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
@@ -175,8 +178,9 @@ class MainActivity : SimpleActivity(), RefreshRecyclerViewListener {
         setupOptionsMenu()
         refreshMenuItems()
         setupEdgeToEdge(
-            padBottomImeAndSystem = listOf(binding.searchHolder, binding.quickCalendarFilter),
+            padBottomImeAndSystem = listOf(binding.searchHolder, binding.adBannerContainer),
         )
+        setupAdMob()
 
         config.initializeHolidayManagementNotice(org.fossify.calendar.BuildConfig.VERSION_CODE)
         checkWhatsNewDialog()
@@ -253,6 +257,7 @@ class MainActivity : SimpleActivity(), RefreshRecyclerViewListener {
 
     override fun onResume() {
         super.onResume()
+        bannerAdView?.resume()
         if (mStoredTextColor != getProperTextColor() || mStoredBackgroundColor != getProperBackgroundColor() || mStoredPrimaryColor != getProperPrimaryColor()
             || mStoredDayCode != Formatter.getTodayCode() || mStoredDimPastEvents != config.dimPastEvents || mStoredDimCompletedTasks != config.dimCompletedTasks
             || mStoredHighlightWeekends != config.highlightWeekends || mStoredHighlightWeekendsColor != config.highlightWeekendsColor
@@ -306,15 +311,32 @@ class MainActivity : SimpleActivity(), RefreshRecyclerViewListener {
     }
 
     override fun onPause() {
+        bannerAdView?.pause()
         super.onPause()
         storeStateVariables()
     }
 
     override fun onDestroy() {
+        bannerAdView?.destroy()
+        bannerAdView = null
         super.onDestroy()
         if (!isChangingConfigurations) {
             EventsDatabase.destroyInstance()
             stopCalDAVUpdateListener()
+        }
+    }
+
+    private fun setupAdMob() {
+        AdManager.requestConsentAndInitialize(this) {
+            runOnUiThread {
+                if (!isDestroyed && !isFinishing && bannerAdView == null) {
+                    binding.adBannerContainer.post {
+                        if (!isDestroyed && !isFinishing && bannerAdView == null) {
+                            bannerAdView = AdManager.loadAdaptiveBanner(this, binding.adBannerContainer)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -333,8 +355,6 @@ class MainActivity : SimpleActivity(), RefreshRecyclerViewListener {
                 shouldGoToTodayBeVisible && !binding.mainMenu.isSearchOpen
             findItem(R.id.go_to_date).isVisible = config.storedView != EVENTS_LIST_VIEW
             findItem(R.id.refresh_caldav_calendars).isVisible = config.caldavSync
-            findItem(R.id.more_apps_from_us).isVisible =
-                resources.getBoolean(org.fossify.commons.R.bool.is_google_play_build)
         }
     }
 
@@ -362,7 +382,6 @@ class MainActivity : SimpleActivity(), RefreshRecyclerViewListener {
                 R.id.manage_holidays -> manageHolidays()
                 R.id.add_birthdays -> tryAddBirthdays()
                 R.id.add_anniversaries -> tryAddAnniversaries()
-                R.id.more_apps_from_us -> launchMoreAppsFromUsIntent()
                 R.id.settings -> launchSettings()
                 R.id.about -> launchAbout()
                 else -> return@setOnMenuItemClickListener false
@@ -613,6 +632,7 @@ class MainActivity : SimpleActivity(), RefreshRecyclerViewListener {
             updateView(it as Int)
             shouldGoToTodayBeVisible = false
             refreshMenuItems()
+            AdManager.maybeShowInterstitial(this)
         }
     }
 
@@ -1314,56 +1334,8 @@ class MainActivity : SimpleActivity(), RefreshRecyclerViewListener {
     }
 
     private fun launchAbout() {
-        val licenses = LICENSE_JODA
-
-        val faqItems = arrayListOf(
-            FAQItem(
-                title = "${getString(R.string.faq_2_title)} ${getString(R.string.faq_2_title_extra)}",
-                text = R.string.faq_2_text
-            ),
-            FAQItem(R.string.faq_5_title, R.string.faq_5_text),
-            FAQItem(R.string.faq_3_title, R.string.faq_3_text),
-            FAQItem(R.string.faq_6_title, R.string.faq_6_text),
-            FAQItem(R.string.faq_1_title, R.string.faq_1_text),
-            FAQItem(
-                title = org.fossify.commons.R.string.faq_1_title_commons,
-                text = org.fossify.commons.R.string.faq_1_text_commons
-            ),
-            FAQItem(
-                title = org.fossify.commons.R.string.faq_4_title_commons,
-                text = org.fossify.commons.R.string.faq_4_text_commons
-            ),
-            FAQItem(R.string.faq_4_title, R.string.faq_4_text)
-        )
-
-        if (resources.getBoolean(org.fossify.commons.R.bool.is_google_play_build)) {
-            faqItems.add(
-                FAQItem(
-                    title = org.fossify.commons.R.string.faq_2_title_commons,
-                    text = org.fossify.commons.R.string.faq_2_text_commons
-                )
-            )
-            faqItems.add(
-                FAQItem(
-                    title = org.fossify.commons.R.string.faq_6_title_commons,
-                    text = org.fossify.commons.R.string.faq_6_text_commons
-                )
-            )
-            faqItems.add(
-                FAQItem(
-                    title = org.fossify.commons.R.string.faq_7_title_commons,
-                    text = org.fossify.commons.R.string.faq_7_text_commons
-                )
-            )
-        }
-
-        startAboutActivity(
-            appNameId = R.string.app_name,
-            licenseMask = licenses,
-            versionName = org.fossify.calendar.BuildConfig.VERSION_NAME,
-            faqItems = faqItems,
-            showFAQBeforeMail = true
-        )
+        hideKeyboard()
+        startActivity(Intent(applicationContext, PlanoraAboutActivity::class.java))
     }
 
     private fun searchQueryChanged(text: String) {

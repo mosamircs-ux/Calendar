@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="red_text">@color/md_red_400_dark</color>
-    <color name="default_birthdays_color">@color/md_blue_800</color>
-    <color name="default_holidays_color">@color/md_green_700</color>
-    <color name="default_anniversaries_color">@color/md_red_400_dark</color>
+    <!-- Planora Calendar Modern Indigo & Violet Brand Palette -->
+    <color name="planora_indigo">#4F46E5</color>
+    <color name="planora_indigo_dark">#3730A3</color>
+    <color name="planora_indigo_light">#818CF8</color>
+    <color name="planora_violet">#7C3AED</color>
+    <color name="planora_lavender_soft">#EEF2FF</color>
+    <color name="planora_lavender_tint">#E0E7FF</color>
+    <color name="planora_surface_light">#F8F9FE</color>
+    <color name="planora_surface_dark">#0F172A</color>
+    <color name="planora_card_light">#FFFFFF</color>
+    <color name="planora_card_dark">#1E293B</color>
+    <color name="planora_text_dark">#0F172A</color>
+    <color name="planora_text_muted">#64748B</color>
+    <color name="planora_divider">#1A4F46E5</color>
+
+    <!-- Override Fossify Commons primary palette with Planora Indigo & Violet -->
+    <color name="color_primary">@color/planora_indigo</color>
+    <color name="color_primary_dark">@color/planora_indigo_dark</color>
+    <color name="color_accent">@color/planora_violet</color>
+
+    <color name="red_text">#E11D48</color>
+    <color name="default_birthdays_color">#7C3AED</color>
+    <color name="default_holidays_color">#4F46E5</color>
+    <color name="default_anniversaries_color">#EC4899</color>
 </resources>

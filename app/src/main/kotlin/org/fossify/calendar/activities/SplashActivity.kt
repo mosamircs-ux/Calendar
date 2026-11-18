@@ -1,13 +1,19 @@
 package org.fossify.calendar.activities
 
 import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import org.fossify.calendar.extensions.getNewEventTimestampFromCode
 import org.fossify.calendar.helpers.*
-import org.fossify.commons.activities.BaseSplashActivity
 import org.joda.time.DateTime
 
-class SplashActivity : BaseSplashActivity() {
-    override fun initActivity() {
+class SplashActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initActivity()
+    }
+
+    private fun initActivity() {
         when {
             intent.extras?.containsKey(DAY_CODE) == true -> Intent(this, MainActivity::class.java).apply {
                 putExtra(DAY_CODE, intent.getStringExtra(DAY_CODE))

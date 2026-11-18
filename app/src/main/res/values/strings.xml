@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_launcher_name">Calendar</string>
+    <string name="app_launcher_name">Planora</string>
+    <string name="planora_tagline">Smart Schedule &amp; Task Planner</string>
+    <string name="planora_about_title">About Planora Calendar</string>
+    <string name="planora_version_format">Version %s</string>
+    <string name="planora_ad_privacy_title">Ad Privacy Preferences</string>
+    <string name="planora_ad_privacy_subtitle">Manage personalized ad consent settings</string>
+    <string name="planora_ad_privacy_unavailable">Privacy options are not required in your current region.</string>
+    <string name="planora_open_source_title">Open-Source License (GPLv3)</string>
+    <string name="planora_open_source_body">Planora Calendar is free and open-source software licensed under the GNU General Public License v3.0 (GPLv3). Built on top of Fossify Calendar and Joda-Time.</string>
     <string name="change_view">Change view</string>
     <string name="daily_view">Daily view</string>
     <string name="weekly_view">Weekly view</string>

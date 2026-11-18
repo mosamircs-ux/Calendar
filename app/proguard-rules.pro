@@ -1,1 +1,4 @@
 -keep class org.fossify.calendar.models.** { *; }
+-keep class org.fossify.calendar.helpers.AdManager { *; }
+-keep class com.google.android.gms.ads.** { *; }
+-keep class com.google.android.ump.** { *; }

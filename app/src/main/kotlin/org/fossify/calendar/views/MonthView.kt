@@ -28,7 +28,7 @@ import kotlin.math.min
 // used in the Monthly view fragment, 1 view per screen
 class MonthView(context: Context, attrs: AttributeSet, defStyle: Int) : View(context, attrs, defStyle) {
     companion object {
-        private const val BG_CORNER_RADIUS = 8f
+        private const val BG_CORNER_RADIUS = 14f
         private const val EVENT_DOT_COLUMN_COUNT = 3
         private const val EVENT_DOT_ROW_COUNT = 1
     }

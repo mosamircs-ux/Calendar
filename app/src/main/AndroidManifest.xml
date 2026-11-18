@@ -20,12 +20,12 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
 
-    <uses-permission
-        android:name="android.permission.USE_FINGERPRINT"
-        tools:node="remove" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <uses-permission
-        android:name="android.permission.ACCESS_NETWORK_STATE"
+        android:name="android.permission.USE_FINGERPRINT"
         tools:node="remove" />
 
     <uses-permission
@@ -39,13 +39,7 @@
     </queries>
 
     <queries>
-        <package android:name="org.fossify.contacts.debug" />
-        <package android:name="org.fossify.contacts" />
-    </queries>
-
-    <queries>
-        <package android:name="org.fossify.calendar.debug" />
-        <package android:name="org.fossify.calendar" />
+        <package android:name="${applicationId}" />
     </queries>
 
     <uses-feature
@@ -130,6 +124,17 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${admobAppId}" />
+
+        <activity
+            android:name=".activities.PlanoraAboutActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:label="@string/planora_about_title"
+            android:parentActivityName=".activities.MainActivity" />
 
         <activity
             android:name="org.fossify.commons.activities.AboutActivity"
